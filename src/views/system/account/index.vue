@@ -1,4 +1,6 @@
 <script setup>
+import { AccountApi } from '@/api/system/account'
+
 const tableColumn = [
   {
     label: 'ID',
@@ -70,7 +72,7 @@ const tableColumn = [
     width: 100,
     prop: 'isAdmin',
     valueType: 'tag',
-    fieldProps: val => (val === 1 ? 'success' : 'info'),
+    fieldProps: val => (val === 1 ? { type: 'success' } : { type: 'info' }),
     hideInSearch: true
   },
   {
@@ -108,14 +110,14 @@ const tableColumn = [
   },
   {
     label: '试用开始时间',
-    width: 120,
+    width: 200,
     prop: 'trialStartDate',
     valueType: 'date-picker',
     hideInSearch: true
   },
   {
     label: '试用结束时间',
-    width: 120,
+    width: 200,
     prop: 'trialEndDate',
     valueType: 'date-picker',
     hideInSearch: true
@@ -135,10 +137,45 @@ const tableColumn = [
     hideInSearch: true
   }
 ]
+const state = reactive({
+  query: {
+    contact: undefined,
+    company: undefined,
+    bizType: undefined,
+    status: undefined
+  },
+  selectIds: []
+})
+
+function handleSelect(data) {
+  state.selectedIds = [...data].map(item => item.id)
+}
+
+async function loadRecords(params) {
+  const { records, total } = await AccountApi.page(params)
+  return { data: records, total }
+}
+
+async function handleBatchDelete() {}
+async function handleCreate() {}
 </script>
 
 <!-- 表单搜索: 联系人、公司、业务类型、状态 -->
 <!-- 数据表格 -->
 <template>
-  <PlusPage :columns="tableColumn" />
+  <PlusPage
+    ref="plusPageInstance"
+    :columns="tableColumn"
+    :params="state.query"
+    :request="loadRecords"
+    :search="{ labelWidth: '80px', colProps: { span: 8 } }"
+    :table="{ isSelection: true, onSelectionChange: handleSelect }"
+  >
+    <template #table-title>
+      <el-row class="button-row">
+        <el-button type="primary" @click="handleCreate"> 添加 </el-button>
+        <el-button type="danger" @click="handleBatchDelete"> 批量删除 </el-button>
+      </el-row>
+    </template>
+  </PlusPage>
 </template>

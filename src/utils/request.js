@@ -37,7 +37,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   resp => {
     const code = resp?.data?.code || 200
-    const result = code === 200 ? resp.data : resp.data.msg
+    const result = code === 200 ? resp.data.data : resp.data.msg
 
     if (resp.request.responseType === 'blob' || resp.request.responseType === 'arraybuffer') {
       return resp.data
