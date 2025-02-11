@@ -5,4 +5,5 @@ export function setupStore(app) {
   app.use(pinia)
 }
 
-export * from './modules'
+export * from './app.store'
+export * from './auth.store'
