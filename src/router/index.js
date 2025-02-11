@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { setupRouterGuard } from './guards'
-import { dynamicRoutes } from './routes'
+import { bizRoutes } from './routes'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -30,7 +30,7 @@ export const router = createRouter({
         title: '账户资料'
       }
     },
-    ...dynamicRoutes,
+    ...bizRoutes,
     {
       name: '404',
       path: '/404',

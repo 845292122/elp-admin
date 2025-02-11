@@ -1,5 +1,5 @@
 import { $AuthApi } from '@/api'
-import { dynamicRoutes } from '@/router/routes'
+import { bizRoutes } from '@/router/routes'
 import { RouteUtil, TokenUtil } from '@/utils'
 import { cloneDeep } from 'lodash'
 import { defineStore } from 'pinia'
@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('authStore', {
           .then(res => {
             this.info = res
             const { isAdmin } = res
-            const cloneRoutes = cloneDeep(dynamicRoutes)
+            const cloneRoutes = cloneDeep(bizRoutes)
             const permRoutes = RouteUtil.filterAuthRoutes(cloneRoutes, isAdmin)
             this.permRoutes = permRoutes
             resolve(permRoutes)
