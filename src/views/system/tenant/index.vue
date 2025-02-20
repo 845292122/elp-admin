@@ -15,7 +15,8 @@ const tableColumn = [
   {
     label: '联系人',
     width: 120,
-    prop: 'contactName'
+    prop: 'contactName',
+    hideInSearch: true
   },
   {
     label: '手机号',
@@ -53,16 +54,16 @@ const tableColumn = [
     hideInSearch: true
   },
   {
-    label: 'premium用户',
+    label: 'premium',
     width: 120,
-    prop: 'isPremium',
-    hideInSearch: true
+    prop: 'isPremium'
   },
   {
     label: '状态',
     width: 100,
     prop: 'status',
     valueType: 'select',
+    hideInSearch: true,
     options: [
       {
         label: '未开始',
@@ -123,8 +124,7 @@ const tableColumn = [
 const state = reactive({
   query: {
     contactName: undefined,
-    companyName: undefined,
-    status: undefined
+    isPremium: undefined
   },
   selectIds: []
 })
