@@ -97,7 +97,7 @@ function initLoginInfo() {
           <template #icon>
             <i-tdesign:logo-wechat />
           </template>
-          通过微信登录
+          微信登录
         </el-button>
       </el-form-item>
     </el-form>

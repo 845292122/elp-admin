@@ -25,12 +25,12 @@ function goProfile() {
 </script>
 
 <template>
-  <el-dropdown w-full trigger="click">
+  <el-dropdown w-full>
     <div flex cursor-pointer items-center w-full justify-between hover-bg-blend-darken>
-      <div flex items-center>
-        <el-avatar shape="square" mr-5 />
-      </div>
-      <div text-16 mt-20>
+      <div flex items-center><i-tdesign:user-1-filled style="color: #1a56db" /></div>
+      <!-- TODO 待修改 -->
+      <div ma-3>管理员</div>
+      <div text-16>
         <i class="i-tdesign:caret-down-small" color-black />
       </div>
     </div>
