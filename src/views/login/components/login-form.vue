@@ -72,14 +72,14 @@ function initLoginInfo() {
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" w-full p-60>
       <h2 text-center mb-20 text-20>{{ title }}</h2>
       <el-form-item prop="phone">
-        <el-input v-model="loginForm.phone" autocomplete="off" placeholder="手机号">
+        <el-input v-model="loginForm.phone" autocomplete="off" placeholder="请输入手机号">
           <template #prefix>
             <i-bi:person-circle />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" placeholder="密码">
+        <el-input v-model="loginForm.password" type="password" placeholder="请输入密码">
           <template #prefix>
             <i-bi:shield-lock />
           </template>
@@ -90,6 +90,15 @@ function initLoginInfo() {
       </el-tooltip>
       <el-form-item>
         <el-button w-full type="primary" :loading="loading" @click="handleLogin"> 登 录 </el-button>
+      </el-form-item>
+      <el-divider content-position="center">其他登录方式</el-divider>
+      <el-form-item>
+        <el-button w-full>
+          <template #icon>
+            <i-tdesign:logo-wechat />
+          </template>
+          通过微信登录
+        </el-button>
       </el-form-item>
     </el-form>
   </div>

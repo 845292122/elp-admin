@@ -14,7 +14,7 @@ const appStore = useAppStore()
     <div w-0 flex-col flex-1>
       <Header />
       <transition name="fade-slide" mode="out-in" appear>
-        <div flex-1 p-12 m-12 h-0>
+        <div flex-1 p-20 h-0 bg-light>
           <slot />
         </div>
       </transition>

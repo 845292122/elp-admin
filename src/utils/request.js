@@ -33,17 +33,19 @@ service.interceptors.request.use(
 
 /**
  * 响应拦截器
+ * TODO 文件响应处理
  */
 service.interceptors.response.use(
   resp => {
-    const code = resp?.data?.code || 200
-    const result = code === 200 ? resp.data.data : resp.data.msg
+    // const status = resp.status
+    const result = resp.data
 
-    if (resp.request.responseType === 'blob' || resp.request.responseType === 'arraybuffer') {
-      return resp.data
-    }
+    return Promise.resolve(result)
+  },
+  err => {
+    let { status, data } = err.response
 
-    if (code === 401) {
+    if (status === 401) {
       if (isRelogin) return
       isRelogin = true
       ElMessageBox.confirm('登录状态已过期，请重新登录', '系统提示', {
@@ -57,26 +59,12 @@ service.interceptors.response.use(
           router.replace({ path: '/login' })
         })
         .catch(() => (isRelogin = false))
-    } else if (code === 403) {
+    } else if (status === 403) {
       ElMessage.warning('权限不足,请联系管理员!')
-      return Promise.reject(new Error(result))
-    } else if (code !== 200) {
-      ElMessage.error(result)
-      return Promise.reject('error')
-    } else {
-      return Promise.resolve(result)
+      return Promise.reject(new Error(data))
     }
-  },
-  err => {
-    let { msg } = err
-    if (msg == 'Network Error') {
-      msg = '后端接口连接异常'
-    } else if (msg.includes('timeout')) {
-      msg = '系统接口请求超时'
-    } else if (msg.includes('Request failed with status code')) {
-      msg = '系统接口' + msg.substr(msg.length - 3) + '异常'
-    }
-    ElMessage({ message: msg, type: 'error', duration: 5 * 1000 })
+
+    ElMessage({ message: data, type: 'error', duration: 5 * 1000 })
     return Promise.reject(err)
   }
 )

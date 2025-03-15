@@ -1,5 +1,12 @@
-# Airy Admin
+# Elp Admin
 
-## 后端
+## 技术栈
 
-https://github.com/845292122/koa-serve
+- pinia
+- element-plus
+- vue-router
+- vue
+
+## 图标方案
+
+- https://icones.js.org/

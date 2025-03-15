@@ -22,7 +22,6 @@
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.3.0",
-    "plus-pro-components": "^0.1.20",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
@@ -30,7 +29,6 @@
     "@iconify-json/bi": "^1.2.2",
     "@iconify-json/tdesign": "^1.2.5",
     "@iconify/vue": "^4.2.0",
-    "@plus-pro-components/resolver": "^0.0.3",
     "@unocss/eslint-config": "^0.61.9",
     "@unocss/preset-rem-to-px": "^0.61.9",
     "@vitejs/plugin-vue": "^5.2.1",

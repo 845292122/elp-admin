@@ -5,9 +5,6 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 export default () => {
   return AutoImport({
     imports: ['vue'],
-    resolvers: [
-      ElementPlusResolver({ importStyle: 'sass' }),
-      IconsResolver({}),
-    ],
+    resolvers: [ElementPlusResolver({ importStyle: 'sass' }), IconsResolver()]
   })
 }
