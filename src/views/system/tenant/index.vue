@@ -1,11 +1,17 @@
 <script setup>
 import { TenantApi } from '@/api'
+import tenantInfo from './tenant-info.vue'
 
 const queryFormRef = ref()
 const queryParams = ref({})
+const tenantInfoRef = ref()
 async function loadRecords(params) {
   const { records, total } = await TenantApi.page(params)
   return { data: records, total }
+}
+
+function handleAdd() {
+  tenantInfoRef.value.open()
 }
 </script>
 
@@ -42,7 +48,7 @@ async function loadRecords(params) {
       <div flex justify-between items-center>
         <div flex items-center font-bold text-16><i-tdesign:list mr-5 color-primary font-extrabold text-20 /> 租户列表</div>
         <div>
-          <el-button>新增租户</el-button>
+          <el-button @click="handleAdd">新增租户</el-button>
         </div>
       </div>
     </template>
@@ -59,4 +65,6 @@ async function loadRecords(params) {
       <el-table-column prop="isPremium" label="PREMIUM" />
     </el-table>
   </el-card>
+
+  <tenant-info ref="tenantInfoRef" />
 </template>
