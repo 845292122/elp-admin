@@ -1,5 +1,11 @@
 <script setup>
+import { TenantApi } from '@/api'
+import { ElMessage } from 'element-plus'
+
+const emit = defineEmits(['reload'])
+
 const drawer = ref(false)
+const formRef = ref()
 const formValue = ref({
   id: undefined,
   contactName: undefined,
@@ -17,8 +23,45 @@ const formValue = ref({
   status: undefined,
   isPremium: undefined
 })
-function open() {
+const rules = reactive({
+  contactName: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
+  contactPhone: [{ required: true, message: '请输入联系电话', trigger: 'blur' }],
+  companyName: [{ required: true, message: '请输入公司名称', trigger: 'blur' }]
+})
+
+function open(initValue) {
   drawer.value = true
+  formValue.value = initValue
+}
+
+async function handleOk() {
+  formRef.value.validate(async valid => {
+    if (valid) {
+      const [startDate, endDate] = formValue.value.subscribeDate ?? []
+      const [trialStartDate, trialEndDate] = formValue.value.trialDate ?? []
+      formValue.value.startDate = startDate
+      formValue.value.endDate = endDate
+      formValue.value.trialStartDate = trialStartDate
+      formValue.value.trialEndDate = trialEndDate
+      delete formValue.value.subscribeDate
+      delete formValue.value.trialDate
+
+      let msg = '新增成功'
+      if (formValue.value.id) {
+        await TenantApi.modify(formValue.value)
+        msg = '修改成功'
+      } else {
+        await TenantApi.create(formValue.value)
+      }
+      ElMessage({
+        type: 'success',
+        message: msg,
+        plain: true
+      })
+      drawer.value = false
+      emit('reload')
+    }
+  })
 }
 
 defineExpose({
@@ -36,7 +79,7 @@ defineExpose({
       :close-on-click-modal="false"
       :destroy-on-close="false"
     >
-      <el-form label-position="top" :model="formValue">
+      <el-form label-position="top" :model="formValue" ref="formRef" :rules="rules">
         <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item label="联系人" prop="contactName">
@@ -92,22 +135,31 @@ defineExpose({
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户数" prop="userCount">
-              <el-input v-model="formValue.userCount" />
+              <el-input-number v-model="formValue.userCount" :min="1" :max="100" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
-              <el-input v-model="formValue.status" />
+              <el-select v-model="formValue.status">
+                <el-option label="未使用" :value="0" />
+                <el-option label="试用中" :value="1" />
+                <el-option label="试用结束" :value="2" />
+                <el-option label="正在使用" :value="3" />
+                <el-option label="已到期" :value="4" />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="是否 Premium" prop="isPremium">
-              <el-input v-model="formValue.isPremium" />
+            <el-form-item label="Premium" prop="isPremium">
+              <el-radio-group v-model="formValue.isPremium">
+                <el-radio :value="1">是</el-radio>
+                <el-radio :value="0">否</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="formValue.remark" />
+              <el-input v-model="formValue.remark" type="textarea" :row="2" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -116,7 +168,7 @@ defineExpose({
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="drawer = false">取 消</el-button>
-          <el-button type="primary" @click="drawer = false">确 定</el-button>
+          <el-button type="primary" @click="handleOk">确 定</el-button>
         </div>
       </template>
     </el-drawer>
