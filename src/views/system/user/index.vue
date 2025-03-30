@@ -1,23 +1,31 @@
 <script setup>
 import { UserApi } from '@/api'
 import UserInfo from './user-info.vue'
+import AssignPerms from '@/components/assign-perms.vue'
 import { InfoFilled } from '@element-plus/icons-vue'
 
+const queryFormRef = ref()
+const assignPermsRef = ref()
+const infoRef = ref()
 const queryPageParams = ref({
   pageNo: 1,
   pageSize: 10
 })
-const queryFormRef = ref()
 const queryParams = ref({})
-const infoRef = ref()
 const tableData = ref({
   records: [],
   total: 0
 })
+const loading = ref(false)
 
 async function loadRecords(params) {
-  const { records, total } = await UserApi.page(params)
-  tableData.value = { records, total }
+  try {
+    loading.value = true
+    const { records, total } = await UserApi.page(params)
+    tableData.value = { records, total }
+  } finally {
+    loading.value = false
+  }
 }
 
 function handleAdd() {
@@ -61,6 +69,20 @@ async function handleRemove(id) {
 
 async function handleReload() {
   await loadRecords({ ...queryPageParams.value, ...queryParams.value })
+}
+
+async function handleAssignPerms(id) {
+  const initValue = await UserApi.getPerms(id)
+  assignPermsRef.value.open(initValue, id)
+}
+
+async function assign(params, resolve, reject) {
+  try {
+    await UserApi.assignPerms(params)
+    resolve()
+  } catch (error) {
+    reject(new Error('分配权限失败：' + error.message))
+  }
 }
 
 ;(() => {
@@ -107,7 +129,7 @@ async function handleReload() {
       </div>
     </template>
 
-    <el-table :data="tableData.records" stripe border style="width: 100%">
+    <el-table :data="tableData.records" stripe border style="width: 100%" v-loading="loading">
       <el-table-column prop="id" label="ID" width="100" />
       <el-table-column prop="nickname" label="联系人" width="150" />
       <el-table-column prop="phone" label="手机号" width="150" />
@@ -124,15 +146,24 @@ async function handleReload() {
           <el-tag v-else type="success">是</el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="150" align="center">
+      <el-table-column fixed="right" label="操作" width="200" align="center">
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="handleEdit(scope.row.id)">编辑</el-button>
-          <el-popconfirm :icon="InfoFilled" icon-color="#626AEF" title="确认删除数据?" @confirm="handleRemove(scope.row.id)">
-            <template #reference>
-              <el-button link type="danger" size="small">删除</el-button>
-            </template>
-          </el-popconfirm>
-          <el-button link type="primary" size="small">更多</el-button>
+          <el-space spacer="|">
+            <el-button link type="primary" size="small" @click="handleEdit(scope.row.id)">编辑</el-button>
+            <el-popconfirm :icon="InfoFilled" icon-color="#626AEF" title="确认删除数据?" @confirm="handleRemove(scope.row.id)">
+              <template #reference>
+                <el-button link type="danger" size="small">删除</el-button>
+              </template>
+            </el-popconfirm>
+            <el-dropdown placement="bottom-end">
+              <el-button link type="primary" size="small">更多</el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="handleAssignPerms(scope.row.id)">分配权限</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </el-space>
         </template>
       </el-table-column>
     </el-table>
@@ -143,4 +174,5 @@ async function handleReload() {
   </el-card>
 
   <user-info ref="infoRef" @reload="handleReload" />
+  <assign-perms ref="assignPermsRef" @assign="assign" />
 </template>

@@ -1,24 +1,32 @@
 <script setup>
 import { TenantApi } from '@/api'
 import TenantInfo from './tenant-info.vue'
+import AssignPerms from '@/components/assign-perms.vue'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { dayjs } from 'element-plus'
 
+const queryFormRef = ref()
+const infoRef = ref()
+const assignPermsRef = ref()
 const queryPageParams = ref({
   pageNo: 1,
   pageSize: 10
 })
-const queryFormRef = ref()
 const queryParams = ref({})
-const infoRef = ref()
 const tableData = ref({
   records: [],
   total: 0
 })
+const loading = ref(false)
 
 async function loadRecords(params) {
-  const { records, total } = await TenantApi.page(params)
-  tableData.value = { records, total }
+  try {
+    loading.value = true
+    const { records, total } = await TenantApi.page(params)
+    tableData.value = { records, total }
+  } finally {
+    loading.value = false
+  }
 }
 
 function handleAdd() {
@@ -65,6 +73,20 @@ async function handleRemove(id) {
 
 async function handleReload() {
   await loadRecords({ ...queryPageParams.value, ...queryParams.value })
+}
+
+async function handleAssignPerms(id) {
+  const initValue = await TenantApi.getPerms(id)
+  assignPermsRef.value.open(initValue, id)
+}
+
+async function assign(params, resolve, reject) {
+  try {
+    await TenantApi.assignPerms(params)
+    resolve()
+  } catch (error) {
+    reject(new Error('分配权限失败：' + error.message)) // 失败时调用 reject
+  }
 }
 
 ;(() => {
@@ -135,15 +157,24 @@ async function handleReload() {
       </el-table-column>
       <el-table-column prop="status" label="状态" width="100" />
       <el-table-column prop="isPremium" label="PREMIUM" width="100" />
-      <el-table-column fixed="right" label="操作" width="150" align="center">
+      <el-table-column fixed="right" label="操作" width="200" align="center">
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="handleEdit(scope.row.id)">编辑</el-button>
-          <el-popconfirm :icon="InfoFilled" icon-color="#626AEF" title="确认删除数据?" @confirm="handleRemove(scope.row.id)">
-            <template #reference>
-              <el-button link type="danger" size="small">删除</el-button>
-            </template>
-          </el-popconfirm>
-          <el-button link type="primary" size="small">更多</el-button>
+          <el-space spacer="|">
+            <el-button link type="primary" size="small" @click="handleEdit(scope.row.id)">编辑</el-button>
+            <el-popconfirm :icon="InfoFilled" icon-color="#626AEF" title="确认删除数据?" @confirm="handleRemove(scope.row.id)">
+              <template #reference>
+                <el-button link type="danger" size="small">删除</el-button>
+              </template>
+            </el-popconfirm>
+            <el-dropdown placement="bottom-end">
+              <el-button link type="primary" size="small">更多</el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="handleAssignPerms(scope.row.id)">分配权限</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </el-space>
         </template>
       </el-table-column>
     </el-table>
@@ -153,4 +184,5 @@ async function handleReload() {
   </el-card>
 
   <tenant-info ref="infoRef" @reload="handleReload" />
+  <assign-perms ref="assignPermsRef" @assign="assign" />
 </template>

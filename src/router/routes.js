@@ -5,7 +5,8 @@ export const bizRoutes = [
     redirect: '/system/user',
     meta: {
       title: '系统管理',
-      icon: 'bi:gear-fill'
+      icon: 'bi:gear-fill',
+      perm: 'system'
     },
     children: [
       {
