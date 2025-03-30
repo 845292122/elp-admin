@@ -1,9 +1,7 @@
 import { createPinia } from 'pinia'
 
-export function setupStore(app) {
-  const pinia = createPinia()
-  app.use(pinia)
-}
+const store = createPinia()
+export default store
 
 export * from './app.store'
 export * from './auth.store'

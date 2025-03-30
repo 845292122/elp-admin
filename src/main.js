@@ -1,15 +1,12 @@
 import 'uno.css'
 import { createApp } from 'vue'
 import App from './App.vue'
-import { setupRouter } from './router'
-import { setupStore } from './store'
+import router from './router'
+import store from './store'
+import '@/router/guard'
 import '@/styles/global.css'
 
-async function bootstrap() {
-  const app = createApp(App)
-  setupStore(app)
-  await setupRouter(app)
-  app.mount('#app')
-}
-
-bootstrap()
+const app = createApp(App)
+app.use(router)
+app.use(store)
+app.mount('#app')

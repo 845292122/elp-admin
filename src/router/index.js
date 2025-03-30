@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { setupRouterGuard } from './guards'
 
-export const router = createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
@@ -14,12 +13,7 @@ export const router = createRouter({
       }
     },
     {
-      path: '/:pathMatch(.*)',
-      redirect: '/404'
-    },
-    {
-      name: '404',
-      path: '/404',
+      path: '/:pathMatch(.*)*',
       component: () => import('@/views/error/404.vue'),
       meta: {
         title: '页面飞走了'
@@ -29,7 +23,4 @@ export const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
 
-export async function setupRouter(app) {
-  app.use(router)
-  setupRouterGuard(router)
-}
+export default router
