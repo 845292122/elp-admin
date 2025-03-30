@@ -30,8 +30,8 @@ const rules = reactive({
 })
 
 function open(initValue) {
-  drawer.value = true
   formValue.value = initValue
+  drawer.value = true
 }
 
 async function handleOk() {
@@ -77,7 +77,7 @@ defineExpose({
       size="40%"
       :close-on-press-escape="false"
       :close-on-click-modal="false"
-      :destroy-on-close="false"
+      :destroy-on-close="true"
     >
       <el-form label-position="top" :model="formValue" ref="formRef" :rules="rules">
         <el-row :gutter="24">

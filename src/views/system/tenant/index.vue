@@ -1,6 +1,6 @@
 <script setup>
 import { TenantApi } from '@/api'
-import tenantInfo from './tenant-info.vue'
+import TenantInfo from './tenant-info.vue'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { dayjs } from 'element-plus'
 
@@ -10,7 +10,7 @@ const queryPageParams = ref({
 })
 const queryFormRef = ref()
 const queryParams = ref({})
-const tenantInfoRef = ref()
+const infoRef = ref()
 const tableData = ref({
   records: [],
   total: 0
@@ -22,7 +22,7 @@ async function loadRecords(params) {
 }
 
 function handleAdd() {
-  tenantInfoRef.value.open({
+  infoRef.value.open({
     userCount: 10,
     isPremium: 0,
     status: 0
@@ -50,7 +50,7 @@ async function handleEdit(id) {
   const info = await TenantApi.info(id)
   info.subscribeDate = [info.startDate, info.endDate]
   info.trialDate = [info.trialStartDate, info.trialEndDate]
-  tenantInfoRef.value.open(info)
+  infoRef.value.open(info)
 }
 
 async function handleRemove(id) {
@@ -152,5 +152,5 @@ async function handleReload() {
     </div>
   </el-card>
 
-  <tenant-info ref="tenantInfoRef" @reload="handleReload" />
+  <tenant-info ref="infoRef" @reload="handleReload" />
 </template>
