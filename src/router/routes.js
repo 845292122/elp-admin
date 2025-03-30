@@ -1,5 +1,23 @@
 export const bizRoutes = [
   {
+    name: 'Home',
+    path: '/',
+    component: () => import('@/views/home/index.vue'),
+    meta: {
+      title: '首页',
+      icon: 'bi:house-fill'
+    }
+  },
+  {
+    name: 'Profile',
+    path: '/profile',
+    component: () => import('@/views/profile/index.vue'),
+    meta: {
+      title: '账户资料',
+      hidden: true
+    }
+  },
+  {
     name: 'system',
     path: '/system',
     redirect: '/system/user',

@@ -3,14 +3,11 @@ import { useAppStore, useAuthStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import MenuItem from './menu-item'
 
-// TODO 测试用,待删除
-import { bizRoutes } from '@/router/routes'
 const authStore = useAuthStore()
 const appStore = useAppStore()
 
-// const { permRoutes } = storeToRefs(authStore)
-
-const permRoutes = bizRoutes
+const { permRoutes } = storeToRefs(authStore)
+const menuList = permRoutes.value.filter(route => route.meta.hidden !== true)
 </script>
 
 <template>
@@ -25,15 +22,7 @@ const permRoutes = bizRoutes
       text-color="#9ea7af"
       active-text-color="#0277fc"
     >
-      <el-menu-item index="/">
-        <el-icon>
-          <i-bi:house-fill />
-        </el-icon>
-        <template #title>
-          <span>首页</span>
-        </template>
-      </el-menu-item>
-      <MenuItem :menuList="permRoutes" />
+      <MenuItem :menuList="menuList" />
     </el-menu>
   </el-scrollbar>
 </template>

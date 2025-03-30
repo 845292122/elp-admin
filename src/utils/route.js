@@ -1,27 +1,11 @@
 export const RouteUtil = {
-  filterAuthRoutes: (routes, isAdmin) => {
-    let adminBool = false
-    if (isAdmin === 1) {
-      adminBool = true
-    }
-    return routes.filter(route => {
-      if (Array.isArray(route.children)) {
-        route.children = RouteUtil.filterAuthRoutes(route.children, isAdmin)
-      }
-      if (!route.requireAdmin) return true
-      return adminBool === route.requireAdmin
-    })
-  },
-  filterHiddenRoutes: routes => {
-    return routes.filter(route => {
-      if (route.hidden && route.hidden === true) {
-        return false
-      }
-      if (route.children) {
-        route.children = RouteUtil.filterHiddenRoutes(route.children)
-      }
-      return true
-    })
+  filterRoutesByPermAndHidden: (routes = [], perms = []) => {
+    return routes
+      .filter(route => route.meta.perm == null || perms.includes(route.meta.perm))
+      .map(route => ({
+        ...route,
+        children: route.children ? RouteUtil.filterRoutesByPermAndHidden(route.children, perms) : undefined
+      }))
   },
   transformRoutesToPermTree: routes => {
     return routes

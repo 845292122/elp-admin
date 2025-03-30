@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { setupRouterGuard } from './guards'
-import { bizRoutes } from './routes'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -15,22 +14,9 @@ export const router = createRouter({
       }
     },
     {
-      name: 'Home',
-      path: '/',
-      component: () => import('@/views/home/index.vue'),
-      meta: {
-        title: '首页'
-      }
+      path: '/:pathMatch(.*)',
+      redirect: '/404'
     },
-    {
-      name: 'Profile',
-      path: '/profile',
-      component: () => import('@/views/profile/index.vue'),
-      meta: {
-        title: '账户资料'
-      }
-    },
-    ...bizRoutes,
     {
       name: '404',
       path: '/404',

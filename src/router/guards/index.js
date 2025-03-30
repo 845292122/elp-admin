@@ -7,5 +7,5 @@ import { createPermissionGuard } from './permission-guard'
  */
 export function setupRouterGuard(router) {
   createLoadingGuard(router)
-  // createPermissionGuard(router)
+  createPermissionGuard(router)
 }

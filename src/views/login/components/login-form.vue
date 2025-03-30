@@ -93,7 +93,7 @@ function initLoginInfo() {
       </el-form-item>
       <el-divider content-position="center">其他登录方式</el-divider>
       <el-form-item>
-        <el-button w-full>
+        <el-button w-full :loading="loading" disabled>
           <template #icon>
             <i-tdesign:logo-wechat />
           </template>

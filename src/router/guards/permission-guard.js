@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/store'
 
-const WHITE_LIST = ['/login', '/404']
+const WHITE_LIST = ['/login']
 export function createPermissionGuard(router) {
   router.beforeEach(async to => {
     const authStore = useAuthStore()
@@ -16,11 +16,14 @@ export function createPermissionGuard(router) {
     if (to.path === '/login') return { path: '/' }
     if (WHITE_LIST.includes(to.path)) return true
 
+    await nextTick()
+
     if (!authStore.info) {
       const permRoutes = await authStore.getInfo()
       permRoutes.forEach(route => {
         router.addRoute(route)
       })
+
       return { ...to, replace: true }
     }
 

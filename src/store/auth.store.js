@@ -1,8 +1,8 @@
-import { $AuthApi } from '@/api'
-import { bizRoutes } from '@/router/routes'
-import { RouteUtil, TokenUtil } from '@/utils'
-import { cloneDeep } from 'lodash'
+import { AuthApi } from '@/api'
+import { TokenUtil } from '@/utils'
 import { defineStore } from 'pinia'
+import { RouteUtil } from '../utils'
+import { bizRoutes } from '../router/routes'
 
 export const useAuthStore = defineStore('authStore', {
   state: () => ({
@@ -14,8 +14,7 @@ export const useAuthStore = defineStore('authStore', {
     login(loginInfo) {
       const { phone, password } = loginInfo
       return new Promise((resolve, reject) => {
-        $AuthApi
-          .login({ phone, password })
+        AuthApi.login({ phone, password })
           .then(res => {
             TokenUtil.setToken(res)
             this.token = res
@@ -28,13 +27,11 @@ export const useAuthStore = defineStore('authStore', {
     },
     getInfo() {
       return new Promise((resolve, reject) => {
-        $AuthApi
-          .getInfo()
+        AuthApi.info()
           .then(res => {
-            this.info = res
-            const { isAdmin } = res
-            const cloneRoutes = cloneDeep(bizRoutes)
-            const permRoutes = RouteUtil.filterAuthRoutes(cloneRoutes, isAdmin)
+            const { info, perms } = res
+            const permRoutes = RouteUtil.filterRoutesByPermAndHidden(bizRoutes, perms)
+            this.info = info
             this.permRoutes = permRoutes
             resolve(permRoutes)
           })
