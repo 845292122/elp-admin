@@ -40,7 +40,7 @@ router.beforeEach((to, form, next) => {
     if (WHITE_LIST.includes(to.path)) {
       next()
     } else {
-      next({ path: '/login' })
+      next(`/login?redirect=${to.fullPath}`)
       NProgress.done()
     }
   }

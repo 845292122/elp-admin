@@ -1,10 +1,11 @@
 <script setup>
 import { useAuthStore } from '@/store'
 import { _localStorage, jscrypt } from '@/utils'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 const PHONE_KEY = 'login-phone'
 const PWD_KEY = 'login-pwd'
 const REM_KEY = 'login-rem'
@@ -42,7 +43,9 @@ function handleLogin() {
         .login(loginForm.value)
         .then(() => {
           ElMessage.success('登录成功')
-          router.push({ path: '/', replace: true })
+          // router.push({ path: '/', replace: true })
+          const redirect = route.query.redirect || '/'
+          router.push({ path: redirect, replace: true })
         })
         .catch(() => {
           loading.value = false

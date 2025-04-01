@@ -1,19 +1,19 @@
 <script setup>
 import BaseInfo from './base-info'
-import Secure from './secure'
+import ProfileSetting from './profile.setting.vue'
 </script>
 
 <template>
-  <el-card>
-    <el-tabs tab-position="left">
-      <!-- <el-tab-pane label="基本信息">
+  <el-row :gutter="24">
+    <el-col :span="6">
+      <el-card>
         <BaseInfo />
-      </el-tab-pane>
-      <el-tab-pane label="安全设置">
-        <Secure />
-      </el-tab-pane> -->
-    </el-tabs>
-  </el-card>
+      </el-card>
+    </el-col>
+    <el-col :span="18">
+      <ProfileSetting />
+    </el-col>
+  </el-row>
 </template>
 
 <style lang="scss" scoped></style>
