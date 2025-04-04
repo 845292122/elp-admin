@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <div>secure</div>
+  <div></div>
 </template>
 
 <style lang="scss" scoped></style>
