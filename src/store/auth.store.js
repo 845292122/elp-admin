@@ -45,6 +45,13 @@ export const useAuthStore = defineStore('authStore', {
       this.permRoutes = []
       this.info = undefined
       TokenUtil.removeToken()
+    },
+    updateInfo(authInfo) {
+      return new Promise((resolve, reject) => {
+        AuthApi.updateInfo(authInfo).then(res => {
+          AuthApi
+        })
+      })
     }
   }
 })

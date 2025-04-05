@@ -1,6 +1,7 @@
 <script setup>
 import { cloneDeep } from 'lodash'
 import { useAuthStore } from '@/store'
+import { AuthApi } from '../../api'
 
 const activeTab = ref('info')
 const authStore = useAuthStore()
@@ -37,12 +38,18 @@ const infoFormRules = reactive({
 })
 
 async function updateInfo() {
-  await ElForm.validateField(infoForm, 'infoForm')
-  await authStore.updateInfo(infoForm.value)
-  ElMessage({
-    type: 'success',
-    message: '修改成功',
-    plain: true
+  infoFormRef.value.validateField(isValid => {
+    if (!isValid) {
+      return
+    }
+
+    AuthApi.update(infoForm.value).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '修改成功',
+        plain: true
+      })
+    })
   })
 }
 

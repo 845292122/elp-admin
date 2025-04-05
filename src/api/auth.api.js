@@ -4,5 +4,6 @@ const baseURL = '/auth'
 
 export const AuthApi = {
   login: data => service.post(`${baseURL}/login`, data),
-  info: () => service.get(`${baseURL}/info`)
+  info: () => service.get(`${baseURL}/info`),
+  update: data => service.post(`${baseURL}/update`, data)
 }
