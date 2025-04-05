@@ -14,9 +14,7 @@ const secureForm = ref({
   confirmPassword: undefined
 })
 
-const infoForm = ref({
-  phone: undefined
-})
+const infoForm = ref(cloneDeep(authStore.info))
 
 const infoFormRules = reactive({
   phone: [
@@ -38,25 +36,28 @@ const infoFormRules = reactive({
 })
 
 async function updateInfo() {
-  infoFormRef.value.validateField(isValid => {
+  infoFormRef.value.validate(async isValid => {
     if (!isValid) {
       return
     }
 
-    AuthApi.update(infoForm.value).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '修改成功',
-        plain: true
-      })
+    await authStore.updateInfo(infoForm.value)
+
+    ElMessage({
+      type: 'success',
+      message: '更新成功',
+      plain: true
     })
   })
 }
 
-function initInfo() {
-  infoForm.value = cloneDeep(info)
-}
-initInfo()
+watch(
+  () => authStore.info,
+  newInfo => {
+    infoForm.value = cloneDeep(newInfo)
+  },
+  { deep: true }
+)
 </script>
 
 <template>

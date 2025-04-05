@@ -47,10 +47,13 @@ export const useAuthStore = defineStore('authStore', {
       TokenUtil.removeToken()
     },
     updateInfo(authInfo) {
-      return new Promise((resolve, reject) => {
-        AuthApi.updateInfo(authInfo).then(res => {
-          AuthApi
-        })
+      return new Promise(async (resolve, reject) => {
+        try {
+          this.info = await AuthApi.update(authInfo)
+          resolve()
+        } catch (error) {
+          reject(error)
+        }
       })
     }
   }
