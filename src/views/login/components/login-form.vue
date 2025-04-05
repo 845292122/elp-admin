@@ -82,7 +82,7 @@ function initLoginInfo() {
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" placeholder="请输入密码">
+        <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password>
           <template #prefix>
             <i-bi:shield-lock />
           </template>
